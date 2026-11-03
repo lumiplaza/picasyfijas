@@ -8,15 +8,21 @@ export default function Result() {
     won?: string;
     secret?: string;
     tries?: string;
+    mode?: string;
   }>();
 
   const won = params.won === 'true';
   const secret = params.secret ?? '----';
   const tries = params.tries ?? '0';
+  const mode = params.mode;
 
-  const handlePlayAgain = () => {
-    router.replace('/game');
-  };
+   const handlePlayAgain = () => {
+    if (mode === 'online') {
+      router.replace('/lobby');
+    } else {
+      router.replace('/game');
+    }
+   };
 
   const handleGoHome = () => {
     router.replace('/');

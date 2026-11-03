@@ -6,11 +6,8 @@ import { colors } from '@/constants/colors';
 
 export default function Home() {
   const handleOnline = () => {
-    Alert.alert(
-      'Próximamente',
-      'El modo online estará disponible muy pronto. ¡Estamos trabajando en ello!'
-    );
-  };
+   router.push('/lobby');
+   };
 
   return (
     <SafeAreaView style={styles.container}>
