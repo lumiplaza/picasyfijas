@@ -18,7 +18,8 @@ import { supabase } from '@/lib/supabase';
 import { getGameById, type Game } from '@/lib/gameService';
 import { NumberPad } from '@/components/NumberPad';
 import { AttemptRow } from '@/components/AttemptRow';
-import { colors } from '@/constants/colors';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors, gradients, mono } from '@/constants/colors';
 
 type Attempt = { guess: string; picas: number; fijas: number };
 
@@ -336,10 +337,19 @@ export default function Game() {
           <Text style={styles.waitingSubtitle}>
             Compartí este código con tu rival para que se una:
           </Text>
-          <Pressable onPress={handleCopyCode} style={styles.codeCard}>
-            <Text style={styles.codeText}>{roomCode}</Text>
-            <Text style={styles.copyHint}>Toca para copiar</Text>
-          </Pressable>
+
+          <LinearGradient
+            colors={gradients.full}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.codeCardBorder}
+          >
+          
+            <Pressable onPress={handleCopyCode} style={styles.codeCardInner}>
+             <Text style={styles.codeText}>{roomCode}</Text>
+             <Text style={styles.copyHint}>Toca para copiar</Text>
+            </Pressable>
+           </LinearGradient>
         </View>
       </SafeAreaView>
     );
@@ -372,6 +382,12 @@ export default function Game() {
           </Text>
         )}
       </View>
+      <LinearGradient
+        colors={['rgba(0,229,255,0.6)', 'rgba(123,92,255,0.4)', 'transparent']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={styles.headerUnderline}
+      />
 
       {isOnline && (
         <View style={styles.opponentInfo}>
@@ -408,9 +424,11 @@ export default function Game() {
         style={styles.list}
         contentContainerStyle={{ paddingVertical: 8 }}
         ListEmptyComponent={
-          <Text style={styles.empty}>
-            {isOnline ? 'Aún no hiciste intentos.' : 'Aún no hay intentos. ¡Adivina el número!'}
-          </Text>
+           <Text style={styles.empty}>
+              {isOnline
+                ? 'Aún no hiciste intentos.'
+                : `Aún no hay intentos. Tenés ${MAX_ATTEMPTS_LOCAL} intentos para lograrlo.`}
+            </Text>
         }
       />
 
@@ -433,71 +451,113 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     gap: 16,
   },
-  loadingText: { color: colors.textMuted, fontSize: 14 },
+  loadingText: { color: colors.textMuted, fontFamily: mono, fontSize: 12, letterSpacing: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    paddingVertical: 14,
   },
-  backText: { color: colors.textMuted, fontSize: 15 },
-  title: { color: colors.text, fontSize: 18, fontWeight: '700' },
-  counter: { fontSize: 15, fontWeight: '700', minWidth: 70, textAlign: 'right' },
-  opponentInfo: {
-    alignItems: 'center',
-    paddingBottom: 4,
+  headerUnderline: { height: 1 },
+  backText: { color: colors.textMuted, fontFamily: mono, fontSize: 12, letterSpacing: 1 },
+  title: {
+    color: colors.text,
+    fontFamily: mono,
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 3,
   },
-  opponentLabel: { color: colors.textMuted, fontSize: 12 },
-  currentBox: { alignItems: 'center', paddingVertical: 12 },
-  currentLabel: { color: colors.textMuted, fontSize: 12, marginBottom: 8 },
+  counter: {
+    fontFamily: mono,
+    fontSize: 12,
+    fontWeight: '700',
+    minWidth: 70,
+    textAlign: 'right',
+    letterSpacing: 1,
+  },
+  opponentInfo: { alignItems: 'center', paddingTop: 10 },
+  opponentLabel: {
+    color: colors.violet,
+    fontFamily: mono,
+    fontSize: 11,
+    letterSpacing: 1,
+  },
+  currentBox: { alignItems: 'center', paddingVertical: 18 },
+  currentLabel: {
+    color: colors.textMuted,
+    fontFamily: mono,
+    fontSize: 11,
+    letterSpacing: 2,
+    marginBottom: 12,
+    textTransform: 'uppercase',
+  },
   currentDigits: {
     color: colors.text,
-    fontSize: 38,
+    fontFamily: mono,
+    fontSize: 40,
     fontWeight: '800',
-    letterSpacing: 4,
+    letterSpacing: 8,
+    textShadowColor: colors.primary,
+    textShadowRadius: 12,
+    textShadowOffset: { width: 0, height: 0 },
   },
   warningText: {
     color: colors.danger,
-    fontSize: 13,
+    fontFamily: mono,
+    fontSize: 11,
     fontWeight: '700',
-    marginTop: 8,
-    letterSpacing: 0.5,
+    marginTop: 10,
+    letterSpacing: 2,
   },
   list: { flex: 1 },
   empty: {
     color: colors.textMuted,
+    fontFamily: mono,
+    fontSize: 11,
     textAlign: 'center',
     marginTop: 24,
-    fontSize: 14,
+    letterSpacing: 1,
   },
   waitingTitle: {
     color: colors.text,
-    fontSize: 20,
+    fontFamily: mono,
+    fontSize: 16,
     fontWeight: '700',
     textAlign: 'center',
     marginTop: 8,
+    letterSpacing: 2,
   },
   waitingSubtitle: {
     color: colors.textMuted,
-    fontSize: 13,
+    fontFamily: mono,
+    fontSize: 11,
     textAlign: 'center',
     paddingHorizontal: 16,
+    letterSpacing: 0.5,
   },
-  codeCard: {
-    marginTop: 12,
-    paddingVertical: 20,
-    paddingHorizontal: 36,
+  codeCardBorder: { borderRadius: 12, padding: 1, marginTop: 16 },
+  codeCardInner: {
+    borderRadius: 11,
+    paddingVertical: 24,
+    paddingHorizontal: 40,
     backgroundColor: colors.surface,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.primary,
     alignItems: 'center',
   },
   codeText: {
-    color: colors.text,
-    fontSize: 32,
+    color: colors.primary,
+    fontFamily: mono,
+    fontSize: 36,
     fontWeight: '800',
-    letterSpacing: 6,
+    letterSpacing: 10,
+    textShadowColor: colors.primary,
+    textShadowRadius: 16,
+    textShadowOffset: { width: 0, height: 0 },
   },
-  copyHint: { color: colors.textMuted, fontSize: 11, marginTop: 6 },
+  copyHint: {
+    color: colors.textMuted,
+    fontFamily: mono,
+    fontSize: 10,
+    marginTop: 8,
+    letterSpacing: 1,
+  },
 });

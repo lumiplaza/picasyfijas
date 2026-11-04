@@ -11,7 +11,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { createGame, joinGame } from '@/lib/gameService';
-import { colors } from '@/constants/colors';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors, gradients, mono } from '@/constants/colors';
 
 export default function Lobby() {
   const [roomCode, setRoomCode] = useState('');
@@ -65,19 +66,23 @@ const handleJoin = async () => {
           <Text style={styles.sectionDesc}>
             Generá un código y compartilo con tu oponente para que se una.
           </Text>
-          <Pressable
-            onPress={handleCreate}
-            disabled={loading !== null}
-            style={({ pressed }) => [
-              styles.primaryButton,
-              (pressed || loading !== null) && styles.pressed,
-            ]}
-          >
-            {loading === 'create' ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.primaryText}>Crear partida</Text>
-            )}
+          <Pressable onPress={handleCreate} disabled={loading !== null}>
+            {({ pressed }) =>
+              loading === 'create' ? (
+                <View style={styles.primaryButton}>
+                  <ActivityIndicator color={colors.background} />
+                </View>
+              ) : (
+                <LinearGradient
+                  colors={gradients.primary}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={[styles.primaryButton, styles.primaryButtonGlow, pressed && styles.pressed]}
+                >
+                  <Text style={styles.primaryText}>CREAR PARTIDA</Text>
+                </LinearGradient>
+              )
+            }
           </Pressable>
         </View>
 
@@ -109,19 +114,29 @@ const handleJoin = async () => {
 
 
           <Pressable
-            onPress={handleJoin}
-            disabled={loading !== null || roomCode.length !== 6}
-            style={({ pressed }) => [
-              styles.secondaryButton,
-              (pressed || loading !== null || roomCode.length !== 6) && styles.pressed,
-            ]}
-          >
-            {loading === 'join' ? (
-              <ActivityIndicator color={colors.text} />
-            ) : (
-              <Text style={styles.secondaryText}>Unirse</Text>
-            )}
-          </Pressable>
+              onPress={handleJoin}
+              disabled={loading !== null || roomCode.length !== 6}
+            >
+              {({ pressed }) => (
+                <LinearGradient
+                  colors={gradients.accent}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={[
+                    styles.secondaryBorder,
+                    (loading !== null || roomCode.length !== 6) && styles.disabledWrap,
+                  ]}
+                >
+                  <View style={[styles.secondaryInner, pressed && styles.pressed]}>
+                    {loading === 'join' ? (
+                      <ActivityIndicator color={colors.text} />
+                    ) : (
+                      <Text style={styles.secondaryText}>UNIRSE</Text>
+                    )}
+                  </View>
+                </LinearGradient>
+              )}
+            </Pressable>
         </View>
       </View>
     </SafeAreaView>
@@ -137,20 +152,48 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  backText: { color: colors.textMuted, fontSize: 15 },
-  headerTitle: { color: colors.text, fontSize: 18, fontWeight: '700' },
+  backText: { color: colors.textMuted,
+    fontFamily: mono,
+    fontSize: 12,
+    letterSpacing: 1,},
+  headerTitle: { color: colors.text,
+    fontFamily: mono,
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 3, },
   content: { flex: 1, paddingHorizontal: 24, paddingTop: 24, gap: 32 },
   section: { gap: 10 },
-  sectionTitle: { color: colors.text, fontSize: 18, fontWeight: '700' },
-  sectionDesc: { color: colors.textMuted, fontSize: 13, lineHeight: 19 },
+  sectionTitle: { color: colors.text,
+    fontFamily: mono,
+    fontSize: 14,
+    fontWeight: '800',
+    letterSpacing: 2, },
+  sectionDesc: { color: colors.textMuted,
+    fontFamily: mono,
+    fontSize: 11,
+    lineHeight: 18,
+    letterSpacing: 0.5, },
   primaryButton: {
     backgroundColor: colors.primary,
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: 8,
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 6,
   },
-  primaryText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  primaryButtonGlow: {
+  shadowColor: colors.primary,
+  shadowOpacity: 0.5,
+  shadowRadius: 12,
+  shadowOffset: { width: 0, height: 4 },
+  elevation: 6,
+  },
+  primaryText: { color: colors.background,
+  fontFamily: mono,
+  fontSize: 14,
+  fontWeight: '800',
+  letterSpacing: 2,
+  },
   secondaryButton: {
     backgroundColor: colors.surface,
     borderWidth: 1,
@@ -160,28 +203,55 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 6,
   },
-  secondaryText: { color: colors.text, fontSize: 16, fontWeight: '700' },
+  secondaryText: { color: colors.text,
+  fontFamily: mono,
+  fontSize: 14,
+  fontWeight: '800',
+  letterSpacing: 2,
+  },
+  disabledWrap: { opacity: 0.4 },
   input: {
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 14,
+    borderColor: 'rgba(0,229,255,0.25)',
+    borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    color: colors.text,
-    fontSize: 22,
-    fontWeight: '700',
+    color: colors.primary,
+    fontFamily: mono,
+    fontSize: 24,
+    fontWeight: '800',
     letterSpacing: 8,
     textAlign: 'center',
   },
+  secondaryBorder: {
+  borderRadius: 8,
+  padding: 1,
+  marginTop: 6,
+  },
+  secondaryInner: {
+  backgroundColor: colors.background,
+  borderRadius: 7,
+  paddingVertical: 15,
+  alignItems: 'center',
+  justifyContent: 'center',
+  },
+
   dividerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
   dividerLine: { flex: 1, height: 1, backgroundColor: colors.border },
-  dividerText: { color: colors.textMuted, fontSize: 13 },
+  dividerText: { color: colors.textMuted,
+    fontFamily: mono,
+    fontSize: 11,
+    letterSpacing: 2, },
   pressed: { opacity: 0.6 },
 
-  errorText: { color: colors.danger, fontSize: 13, textAlign: 'center', marginTop: 8 },
+  errorText: { color: colors.danger,
+    fontFamily: mono,
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 8,},
 });

@@ -1,17 +1,5 @@
-/* import { Stack } from 'expo-router';
 
-export default function RootLayout() {
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="game" />
-      <Stack.Screen name="result" />
-      <Stack.Screen name="how-to-play" />
-    </Stack>
-  );
-} */
-
-  import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
