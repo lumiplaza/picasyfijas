@@ -427,7 +427,7 @@ export default function Game() {
            <Text style={styles.empty}>
               {isOnline
                 ? 'Aún no hiciste intentos.'
-                : `Aún no hay intentos. Tenés ${MAX_ATTEMPTS_LOCAL} intentos para lograrlo.`}
+                : `Aún no hay intentos. \nTenés ${MAX_ATTEMPTS_LOCAL} intentos para lograrlo.`}
             </Text>
         }
       />
